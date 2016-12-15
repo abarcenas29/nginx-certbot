@@ -24,6 +24,10 @@ sed	-e "s/SERVER_NAME/${SERVER_NAME}/" \
 	-e "s/SERVICE_PORT/${SERVICE_PORT}/" \
 	/nginx.conf.template > /etc/nginx/conf.d/default.conf
 
+if [ -e "/etc/letsencrypt/live/${SERVER_NAME}/fullchain.pem" ] && [ ! -e "/etc/letsencrypt/live/${SERVER_NAME}/privkey.pem" ]; then
+	sed -i "s/#ssl_certificate/ssl_certificate/" /etc/nginx/conf.d/default.conf
+fi
+
 service dnsmasq restart
 
 mkdir -p /etc/letsencrypt/www
