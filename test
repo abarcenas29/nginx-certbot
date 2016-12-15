@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ -z "$4" ]; then
+	echo "run with [container] [port] [domain] [email]"
+	exit 1
+fi
+
+docker run -p 443:443 -p 80:80 --link $1:service \
+	-e CERT_EMAIL="$4" \
+	-e SERVER_NAME="$3" \
+	-e SERVICE_NAME=service \
+	-e SERVICE_PORT=$2 \
+	-v ${PWD}/letsencrypt/etc:/etc/letsencrypt \
+	--rm -ti --name test-nginx-certbot nginx-certbot
